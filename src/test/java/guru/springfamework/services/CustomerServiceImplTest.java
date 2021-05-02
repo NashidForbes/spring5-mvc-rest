@@ -39,13 +39,13 @@ public class CustomerServiceImplTest {
         //given
         Customer customer1 = new Customer();
         customer1.setId(1l);
-        customer1.setFirstName("Michale");
-        customer1.setLastName("Weston");
+        customer1.setFirstname("Michale");
+        customer1.setLastname("Weston");
 
         Customer customer2 = new Customer();
         customer2.setId(2l);
-        customer2.setFirstName("Sam");
-        customer2.setLastName("Axe");
+        customer2.setFirstname("Sam");
+        customer2.setLastname("Axe");
 
         when(customerRepository.findAll()).thenReturn(Arrays.asList(customer1, customer2));
 
@@ -62,14 +62,14 @@ public class CustomerServiceImplTest {
         //given
         Customer customer1 = new Customer();
         customer1.setId(1l);
-        customer1.setFirstName("Michale");
-        customer1.setLastName("Weston");
+        customer1.setFirstname("Michale");
+        customer1.setLastname("Weston");
 
         when(customerRepository.findById(anyLong())).thenReturn(java.util.Optional.ofNullable(customer1));
 
         //when
         CustomerDTO customerDTO = customerService.getCustomerById(1L);
 
-        assertEquals("Michale", customerDTO.getFirstName());
+        assertEquals("Michale", customerDTO.getFirstname());
     }
 }

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @Controller
-@RequestMapping("/api/v1/customers/")
+@RequestMapping("/api/v1/customers")
 public class CustomerController {
 
     private final CustomerService customerService;
@@ -35,7 +35,7 @@ public class CustomerController {
     }*/
 
 
-    @GetMapping({"{id}"})
+    @GetMapping({"/{id}"})
     public ResponseEntity<CustomerDTO> getCustomerById(@PathVariable Long id){
         return new ResponseEntity<CustomerDTO>(customerService.getCustomerById(id),
                 HttpStatus.OK);
@@ -44,6 +44,6 @@ public class CustomerController {
     @PostMapping
     public ResponseEntity<CustomerDTO> createNewCustomer(@RequestBody CustomerDTO customerDTO){
         return new ResponseEntity<CustomerDTO>(customerService.createNewCustomer(customerDTO),
-                HttpStatus.OK);
+                HttpStatus.CREATED);
     }
 }
