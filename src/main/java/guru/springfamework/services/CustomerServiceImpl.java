@@ -2,6 +2,7 @@ package guru.springfamework.services;
 
 import guru.springfamework.api.v1.mapper.CustomerMapper;
 import guru.springfamework.api.v1.model.CustomerDTO;
+import guru.springfamework.controllers.v1.CustomerController;
 import guru.springfamework.domain.Customer;
 import guru.springfamework.repositories.CustomerRepository;
 import guru.springfamework.services.interfaces.CustomerService;
@@ -24,7 +25,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<CustomerDTO> getAllCustomers() {
+    public List<CustomerDTO> getAllCustomers() throws ResourceNotFoundException {
         return customerRepository.findAll()
                 .stream()
                 .map(customer -> {
@@ -36,15 +37,20 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerDTO getCustomerByName(String name) {
+    public CustomerDTO getCustomerByName(String name) throws ResourceNotFoundException {
         return null;
     }
 
     @Override
     public CustomerDTO getCustomerById(Long id) {
-        Customer customer = customerRepository.findById(id).get();
-        customer.setCustomerUrl("/api/v1/customers/" + customer.getId());
-        return customerMapper.customerToCustomerDTO(customer);
+        return customerRepository.findById(id)
+                .map(customerMapper::customerToCustomerDTO)
+                .map(customerDTO -> {
+                    //set API URL
+                    customerDTO.setCustomerUrl(CustomerController.BASE_URL + "/" + id);
+                    return customerDTO;
+                })
+                .orElseThrow(ResourceNotFoundException::new);
     }
 
     @Override
@@ -71,7 +77,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     // using http PATCH method
     @Override
-    public CustomerDTO patchCustomerByIdDTO(Long id, CustomerDTO customerDTO) {
+    public CustomerDTO patchCustomerByIdDTO(Long id, CustomerDTO customerDTO) throws ResourceNotFoundException {
         return customerRepository.findById(id).map(customer -> {
 
             if(customerDTO.getFirstname() != null){
@@ -82,8 +88,8 @@ public class CustomerServiceImpl implements CustomerService {
                 customer.setLastname(customerDTO.getLastname());
             }
 
-            return customerMapper.customerToCustomerDTO(customerRepository.save(customer));
-        }).orElseThrow(RuntimeException::new); //todo implement better exception handling;
+            return saveCustomerDTO(customerMapper.customerDTOToCustomer(customerDTO));
+        }).orElseThrow(ResourceNotFoundException::new);
     }
 
     @Override

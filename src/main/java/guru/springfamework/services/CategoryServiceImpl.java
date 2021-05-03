@@ -21,7 +21,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryDTO> getAllCategories() {
+    public List<CategoryDTO> getAllCategories() throws ResourceNotFoundException {
         return categoryRepository.findAll()
                 .stream()
                 .map(categoryMapper::categoryToCategoryDTO)
@@ -29,7 +29,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDTO getCategoryByName(String name) {
+    public CategoryDTO getCategoryByName(String name) throws ResourceNotFoundException {
         return categoryMapper.categoryToCategoryDTO(categoryRepository.findByName(name));
     }
 }
