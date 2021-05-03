@@ -23,7 +23,7 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-    @GetMapping
+    @GetMapping({"","/"})
     public ResponseEntity<CustomerListDTO> getAllCustomers(){
         return new ResponseEntity<CustomerListDTO>(
                 new CustomerListDTO(customerService.getAllCustomers()), HttpStatus.OK);
