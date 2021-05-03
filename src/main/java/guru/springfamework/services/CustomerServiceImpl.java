@@ -5,11 +5,13 @@ import guru.springfamework.api.v1.model.CustomerDTO;
 import guru.springfamework.domain.Customer;
 import guru.springfamework.repositories.CustomerRepository;
 import guru.springfamework.services.interfaces.CustomerService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class CustomerServiceImpl implements CustomerService {
     private final CustomerMapper customerMapper;
@@ -65,6 +67,29 @@ public class CustomerServiceImpl implements CustomerService {
         CustomerDTO savedCustomerDTO = saveCustomerDTO(customer);
         savedCustomerDTO.setId(id);
         return savedCustomerDTO;
+    }
+
+    // using http PATCH method
+    @Override
+    public CustomerDTO patchCustomerByIdDTO(Long id, CustomerDTO customerDTO) {
+        return customerRepository.findById(id).map(customer -> {
+
+            if(customerDTO.getFirstname() != null){
+                customer.setFirstname(customerDTO.getFirstname());
+            }
+
+            if(customerDTO.getLastname() != null){
+                customer.setLastname(customerDTO.getLastname());
+            }
+
+            return customerMapper.customerToCustomerDTO(customerRepository.save(customer));
+        }).orElseThrow(RuntimeException::new); //todo implement better exception handling;
+    }
+
+    @Override
+    public void deleteCustomerByIdDTO(Long id) {
+        log.info("Delete customer id " + id);
+        customerRepository.deleteById(id);
     }
 
 

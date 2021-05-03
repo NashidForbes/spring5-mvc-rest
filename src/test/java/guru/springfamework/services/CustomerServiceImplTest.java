@@ -2,26 +2,35 @@ package guru.springfamework.services;
 
 import guru.springfamework.api.v1.mapper.CustomerMapper;
 import guru.springfamework.api.v1.model.CustomerDTO;
+import guru.springfamework.controllers.v1.CustomerController;
 import guru.springfamework.domain.Customer;
 import guru.springfamework.repositories.CustomerRepository;
 import guru.springfamework.services.interfaces.CustomerService;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 public class CustomerServiceImplTest {
 
     @Mock
     CustomerRepository customerRepository;
+
+    MockMvc mockMvc;
+
+    @InjectMocks
+    CustomerController customerController;
 
     CustomerMapper customerMapper = CustomerMapper.INSTANCE;
 
@@ -32,6 +41,7 @@ public class CustomerServiceImplTest {
         MockitoAnnotations.initMocks(this);
 
         customerService = new CustomerServiceImpl(customerMapper, customerRepository);
+        mockMvc = MockMvcBuilders.standaloneSetup(customerController).build();
     }
 
     @Test
@@ -72,4 +82,17 @@ public class CustomerServiceImplTest {
 
         assertEquals("Michale", customerDTO.getFirstname());
     }
+
+
+    @Test
+    public void testDeleteCustomer() throws Exception {
+
+        Long id = 1L;
+
+        customerService.deleteCustomerByIdDTO(id);
+
+        verify(customerRepository, times(1)).deleteById(anyLong());
+    }
+
 }
+
