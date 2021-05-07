@@ -30,7 +30,7 @@ public class CustomerServiceImpl implements CustomerService {
                 .stream()
                 .map(customer -> {
                     CustomerDTO customerDTO = customerMapper.customerToCustomerDTO(customer);
-                    customerDTO.setCustomerUrl("/api/v1/customers/" + customer.getId());
+                    customerDTO.setCustomerUrl(CustomerController.BASE_URL + "/" + customer.getId());
                     return customerDTO;
                 })
                 .collect(Collectors.toList());
@@ -56,11 +56,11 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerDTO createNewCustomer(CustomerDTO customerDTO) {
         Customer customer = customerMapper.customerDTOToCustomer(customerDTO);
-        CustomerDTO returnDto = saveCustomerDTO(customer);
+        CustomerDTO returnDto = saveCustomer(customer);
         return returnDto;
     }
 
-    private CustomerDTO saveCustomerDTO(Customer customer) {
+    private CustomerDTO saveCustomer(Customer customer) {
         Customer savedCustomer = customerRepository.save(customer);
         savedCustomer.setCustomerUrl("/api/v1/customer/" + savedCustomer.getId());
         CustomerDTO returnDto = customerMapper.customerToCustomerDTO(savedCustomer);
@@ -68,16 +68,16 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerDTO saveCustomerByIdDTO(Long id, CustomerDTO customerDTO) {
+    public CustomerDTO saveCustomerById(Long id, CustomerDTO customerDTO) {
         Customer customer = customerMapper.customerDTOToCustomer(customerDTO);
-        CustomerDTO savedCustomerDTO = saveCustomerDTO(customer);
+        CustomerDTO savedCustomerDTO = saveCustomer(customer);
         savedCustomerDTO.setId(id);
         return savedCustomerDTO;
     }
 
     // using http PATCH method
     @Override
-    public CustomerDTO patchCustomerByIdDTO(Long id, CustomerDTO customerDTO) throws ResourceNotFoundException {
+    public CustomerDTO patchCustomerById(Long id, CustomerDTO customerDTO) throws ResourceNotFoundException {
         return customerRepository.findById(id).map(customer -> {
 
             if(customerDTO.getFirstname() != null){
@@ -88,12 +88,12 @@ public class CustomerServiceImpl implements CustomerService {
                 customer.setLastname(customerDTO.getLastname());
             }
 
-            return saveCustomerDTO(customerMapper.customerDTOToCustomer(customerDTO));
+            return saveCustomer(customerMapper.customerDTOToCustomer(customerDTO));
         }).orElseThrow(ResourceNotFoundException::new);
     }
 
     @Override
-    public void deleteCustomerByIdDTO(Long id) {
+    public void deleteCustomerById(Long id) {
         log.info("Delete customer id " + id);
         customerRepository.deleteById(id);
     }

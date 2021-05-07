@@ -124,7 +124,7 @@ public class CustomerControllerTest {
         returnDTO.setLastname(customer.getLastname());
         returnDTO.setCustomerUrl(CustomerController.BASE_URL+"/1");
 
-        when(customerService.saveCustomerByIdDTO(anyLong(), any(CustomerDTO.class))).thenReturn(returnDTO);
+        when(customerService.saveCustomerById(anyLong(), any(CustomerDTO.class))).thenReturn(returnDTO);
 
         //when/then
         mockMvc.perform(put(CustomerController.BASE_URL+"/1")
@@ -146,7 +146,7 @@ public class CustomerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(customerService).deleteCustomerByIdDTO(anyLong());
+        verify(customerService).deleteCustomerById(anyLong());
     }
 
 

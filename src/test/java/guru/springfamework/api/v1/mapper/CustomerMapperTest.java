@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class CustomerMapperImplTest {
+public class CustomerMapperTest {
 
     public static final String FIRSTNAME = "Jimmy";
     public static final String LASTNAME = "Fallon";

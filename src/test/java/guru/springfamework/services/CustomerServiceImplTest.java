@@ -89,7 +89,7 @@ public class CustomerServiceImplTest {
 
         Long id = 1L;
 
-        customerService.deleteCustomerByIdDTO(id);
+        customerService.deleteCustomerById(id);
 
         verify(customerRepository, times(1)).deleteById(anyLong());
     }

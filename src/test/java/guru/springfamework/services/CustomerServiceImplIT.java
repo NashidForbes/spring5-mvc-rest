@@ -6,6 +6,7 @@ import guru.springfamework.bootstrap.Bootstrap;
 import guru.springfamework.domain.Customer;
 import guru.springfamework.repositories.CategoryRepository;
 import guru.springfamework.repositories.CustomerRepository;
+import guru.springfamework.repositories.VendorRepository;
 import guru.springfamework.services.interfaces.CustomerService;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,6 +36,9 @@ public class CustomerServiceImplIT {
     @Autowired
     CategoryRepository categoryRepository;
 
+    @Autowired
+    VendorRepository vendorRepository;
+
     CustomerService customerService;
 
     @Before
@@ -43,7 +47,7 @@ public class CustomerServiceImplIT {
         System.out.println(customerRepository.findAll().size());
 
         //setup data for testing
-        Bootstrap bootstrap = new Bootstrap(categoryRepository, customerRepository);
+        Bootstrap bootstrap = new Bootstrap(vendorRepository, categoryRepository, customerRepository);
         bootstrap.run(); //load data
 
         customerService = new CustomerServiceImpl(CustomerMapper.INSTANCE, customerRepository);
@@ -63,7 +67,7 @@ public class CustomerServiceImplIT {
         CustomerDTO customerDTO = new CustomerDTO();
         customerDTO.setFirstname(updatedName);
 
-        customerService.patchCustomerByIdDTO(id, customerDTO);
+        customerService.patchCustomerById(id, customerDTO);
 
         Customer updatedCustomer = customerRepository.findById(id).get();
 
@@ -88,7 +92,7 @@ public class CustomerServiceImplIT {
         CustomerDTO customerDTO = new CustomerDTO();
         customerDTO.setLastname(updatedName);
 
-        customerService.patchCustomerByIdDTO(id, customerDTO);
+        customerService.patchCustomerById(id, customerDTO);
 
         Customer updatedCustomer = customerRepository.findById(id).get();
 
