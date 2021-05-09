@@ -71,7 +71,7 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerDTO saveCustomerById(Long id, CustomerDTO customerDTO) {
         Customer customer = customerMapper.customerDTOToCustomer(customerDTO);
         CustomerDTO savedCustomerDTO = saveCustomer(customer);
-        savedCustomerDTO.setId(id);
+        //savedCustomerDTO.setId(id);
         return savedCustomerDTO;
     }
 
