@@ -1,20 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>guru.springfamework</groupId>
-		<artifactId>spring5-mvc-rest</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-	</parent>
-	<groupId>guru.springframework</groupId>
-	<artifactId>rest-model</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>rest-model</name>
-	<description>Demo project for Spring Boot</description>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>guru.springfamework</groupId>
+        <artifactId>spring5-mvc-rest</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <groupId>guru.springframework</groupId>
+    <artifactId>rest-model</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>rest-model</name>
+    <description>Demo project for Spring Boot</description>
 
-	<packaging>jar</packaging>
+    <packaging>jar</packaging>
+    <properties>
+        <jaxb2-maven.version>2.5.0</jaxb2-maven.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+        </dependency>
+    </dependencies>
 
-
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+                <version>${jaxb2-maven.version}</version>
+                <executions>
+                    <execution>
+                        <id>xjc</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!-- The package of your generated sources -->
+                    <packageName>guru.springframework.model</packageName>
+                    <sources>
+                        <source>src/main/resources/xsd</source>
+                    </sources>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
