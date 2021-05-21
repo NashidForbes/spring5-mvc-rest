@@ -9,7 +9,7 @@
     </parent>
     <groupId>guru.springframework</groupId>
     <artifactId>rest-model</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+<!--    <version>0.0.1-SNAPSHOT</version>-->
     <name>rest-model</name>
     <description>Demo project for Spring Boot</description>
 
@@ -40,7 +40,7 @@
                 </executions>
                 <configuration>
                     <!-- The package of your generated sources -->
-                    <packageName>guru.springframework.model</packageName>
+                    <packageName>guru.springframework.model.ref</packageName>
                     <sources>
                         <source>src/main/resources/xsd</source>
                     </sources>
