@@ -51,12 +51,12 @@ public class CustomerControllerTest {
         CustomerDTO customer1 = new CustomerDTO();
         customer1.setFirstname("Michale");
         customer1.setLastname("Weston");
-        customer1.setCustomerUrl("/api/v1/customer/1");
+        customer1.setCustomerUrl(CustomerController.BASE_URL + "/1");
 
         CustomerDTO customer2 = new CustomerDTO();
         customer2.setFirstname("Sam");
         customer2.setLastname("Axe");
-        customer2.setCustomerUrl("/api/v1/customer/2");
+        customer2.setCustomerUrl(CustomerController.BASE_URL + "/2");
 
         doReturn(customerService.getAllCustomers()).when(Arrays.asList(customer1, customer2));
         //when(customerService.getAllCustomers()).thenReturn(Arrays.asList(customer1, customer2));
@@ -74,12 +74,13 @@ public class CustomerControllerTest {
         CustomerDTO customer1 = new CustomerDTO();
         customer1.setFirstname("Michale");
         customer1.setLastname("Weston");
-        customer1.setCustomerUrl("/api/v1/customer/1");
+        customer1.setCustomerUrl(CustomerController.BASE_URL + "/1");
 
         when(customerService.getCustomerById(anyLong())).thenReturn(customer1);
 
         //when
-        mockMvc.perform(get(CustomerController.BASE_URL+"/1")
+        mockMvc.perform(get(CustomerController.BASE_URL + "/1")
+                .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstname", equalTo("Michale")));
@@ -101,10 +102,10 @@ public class CustomerControllerTest {
         when(customerService.createNewCustomer(customer)).thenReturn(returnDTO);
 
         //when/then
-       mockMvc.perform(post(CustomerController.BASE_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(customer)))
-                //.andReturn().getResponse().getContentAsString();
+        mockMvc.perform(post(CustomerController.BASE_URL)
+                .accept(MediaType.APPLICATION_JSON)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(asJsonString(customer)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.firstname", equalTo("Fred")))
                 .andExpect(jsonPath("$.customerUrl", equalTo(CustomerController.BASE_URL+"/1")));
@@ -137,6 +138,30 @@ public class CustomerControllerTest {
                 .andExpect(jsonPath("$.customer_url", equalTo(CustomerController.BASE_URL+"/1")));
 
         //System.out.println(response);
+    }
+
+    @Test
+    public void testPatchCustomer() throws Exception {
+
+        //given
+        CustomerDTO customer = new CustomerDTO();
+        customer.setFirstname("Fred");
+
+        CustomerDTO returnDTO = new CustomerDTO();
+        returnDTO.setFirstname(customer.getFirstname());
+        returnDTO.setLastname("Flintstone");
+        returnDTO.setCustomerUrl(CustomerController.BASE_URL + "/1");
+
+        when(customerService.patchCustomerById(anyLong(), any(CustomerDTO.class))).thenReturn(returnDTO);
+
+        mockMvc.perform(patch(CustomerController.BASE_URL + "/1")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(customer)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstname", equalTo("Fred")))
+                .andExpect(jsonPath("$.lastname", equalTo("Flintstone")))
+                .andExpect(jsonPath("$.customerUrl", equalTo(CustomerController.BASE_URL + "/1")));
     }
 
 
