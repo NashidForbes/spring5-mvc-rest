@@ -9,7 +9,7 @@
     </parent>
     <groupId>guru.springframework</groupId>
     <artifactId>rest-model</artifactId>
-<!--    <version>0.0.1-SNAPSHOT</version>-->
+    <!--    <version>0.0.1-SNAPSHOT</version>-->
     <name>rest-model</name>
     <description>Demo project for Spring Boot</description>
 
@@ -19,34 +19,82 @@
     </properties>
     <dependencies>
         <dependency>
-            <groupId>jakarta.xml.bind</groupId>
-            <artifactId>jakarta.xml.bind-api</artifactId>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>2.3.2</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.activation</groupId>
+            <artifactId>jakarta.activation</artifactId>
+            <version>1.2.1</version>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>jaxb2-maven-plugin</artifactId>
-                <version>${jaxb2-maven.version}</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <classifier>qa</classifier>
+                            <excludes>
+                                <exclude>**/Application*</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration>
+                    <release>11</release>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.0</version>
+                <configuration>
+                    <argLine>--illegal-access=permit</argLine>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-xjc-plugin</artifactId>
+                <version>3.3.0</version>
                 <executions>
                     <execution>
                         <id>xjc</id>
+                        <phase>generate-sources</phase>
                         <goals>
-                            <goal>xjc</goal>
+                            <goal>xsdtojava</goal>
                         </goals>
+                        <configuration>
+                            <xsdOptions>
+                                <xsdOption>
+                                    <xsd>${basedir}/src/main/resources/xsd/customer.xsd</xsd>
+                                    <packagename>guru.springfamework.model</packagename>
+                                </xsdOption>
+                            </xsdOptions>
+                        </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <!-- The package of your generated sources -->
-                    <packageName>guru.springframework.model.ref</packageName>
-                    <sources>
-                        <source>src/main/resources/xsd</source>
-                    </sources>
-                </configuration>
             </plugin>
         </plugins>
     </build>
-
 </project>

@@ -1,6 +1,6 @@
 package guru.springfamework.controllers.v1;
 
-import guru.springfamework.api.v1.model.CustomerDTO;
+import guru.springfamework.model.CustomerDTO;
 import guru.springfamework.controllers.RestResponseEntityExceptionHandler;
 import guru.springfamework.services.ResourceNotFoundException;
 import guru.springfamework.services.interfaces.CustomerService;
@@ -20,8 +20,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -59,7 +58,8 @@ public class CustomerControllerTest {
         customer2.setLastname("Axe");
         customer2.setCustomerUrl("/api/v1/customer/2");
 
-        when(customerService.getAllCustomers()).thenReturn(Arrays.asList(customer1, customer2));
+        doReturn(customerService.getAllCustomers()).when(Arrays.asList(customer1, customer2));
+        //when(customerService.getAllCustomers()).thenReturn(Arrays.asList(customer1, customer2));
 
         mockMvc.perform(get(CustomerController.BASE_URL)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -88,7 +88,8 @@ public class CustomerControllerTest {
     @Test
     public void createNewCustomer() throws Exception {
         //given
-        CustomerDTO customer = new CustomerDTO();
+        guru.springfamework.model.CustomerDTO customer =
+                new guru.springfamework.model.CustomerDTO();
         customer.setFirstname("Fred");
         customer.setLastname("Flintstone");
 
@@ -106,7 +107,7 @@ public class CustomerControllerTest {
                 //.andReturn().getResponse().getContentAsString();
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.firstname", equalTo("Fred")))
-                .andExpect(jsonPath("$.customer_url", equalTo(CustomerController.BASE_URL+"/1")));
+                .andExpect(jsonPath("$.customerUrl", equalTo(CustomerController.BASE_URL+"/1")));
 
         //System.out.println(response);
     }

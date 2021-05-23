@@ -1,19 +1,18 @@
 package guru.springfamework.controllers.v1;
 
-import guru.springfamework.api.v1.model.CustomerDTO;
-import guru.springfamework.api.v1.model.CustomerListDTO;
+
+import guru.springfamework.model.CustomerDTO;
+import guru.springfamework.model.CustomerListDTO;
 import guru.springfamework.services.interfaces.CustomerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @Api(description = "This is my Customer Controller")
 @Slf4j
-@Controller
+@RestController
 @RequestMapping(CustomerController.BASE_URL)
 public class CustomerController {
 
@@ -28,9 +27,11 @@ public class CustomerController {
     @ApiOperation(value = "This will get a list of Customers", notes = "These are some notes " +
             "about the API.")
     @GetMapping({"","/"})
-    public ResponseEntity<CustomerListDTO> getAllCustomers(){
-        return new ResponseEntity<CustomerListDTO>(
-                new CustomerListDTO(customerService.getAllCustomers()), HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+    public CustomerListDTO getAllCustomers(){
+                CustomerListDTO customerListDTO = new CustomerListDTO();
+                customerListDTO.getCustomers().addAll(customerService.getAllCustomers());
+                return customerListDTO;
     }
 
 /*    @GetMapping({"{name}"})
@@ -42,35 +43,35 @@ public class CustomerController {
     @ApiOperation(value = "This will get a Customer by Id", notes = "This returns a CustomerDTO " +
             "object")
     @GetMapping({"/{id}"})
-    public ResponseEntity<CustomerDTO> getCustomerById(@PathVariable Long id){
-        return new ResponseEntity<CustomerDTO>(customerService.getCustomerById(id),
-                HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+    public CustomerDTO getCustomerById(@PathVariable Long id){
+        return customerService.getCustomerById(id);
     }
 
     @PostMapping
-    public ResponseEntity<CustomerDTO> createNewCustomer(@RequestBody CustomerDTO customerDTO){
-        return new ResponseEntity<CustomerDTO>(customerService.createNewCustomer(customerDTO),
-                HttpStatus.CREATED);
+    @ResponseStatus(HttpStatus.CREATED)
+    public CustomerDTO createNewCustomer(@RequestBody CustomerDTO customerDTO){
+        return customerService.createNewCustomer(customerDTO);
     }
 
 
     @PutMapping({"/{id}"})
-    public ResponseEntity<CustomerDTO> updateCustomer(@PathVariable Long id,
-                                                      @RequestBody CustomerDTO customerDTO){
-        return new ResponseEntity<CustomerDTO>(customerService.saveCustomerById(id, customerDTO),
-                HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+    public CustomerDTO updateCustomer(@PathVariable Long id,
+                                      @RequestBody CustomerDTO customerDTO){
+        return customerService.saveCustomerById(id, customerDTO);
     }
 
     @PatchMapping({"/{id}"})
-    public ResponseEntity<CustomerDTO> patchCustomer(@PathVariable Long id,
+    @ResponseStatus(HttpStatus.OK)
+    public CustomerDTO patchCustomer(@PathVariable Long id,
                                                       @RequestBody CustomerDTO customerDTO){
-        return new ResponseEntity<CustomerDTO>(customerService.patchCustomerById(id, customerDTO),
-                HttpStatus.OK);
+        return customerService.patchCustomerById(id, customerDTO);
     }
 
     @DeleteMapping({"/{id}"})
-    public ResponseEntity<Void> deleteCustomer(@PathVariable Long id){
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteCustomer(@PathVariable Long id){
         customerService.deleteCustomerById(id);
-        return new ResponseEntity<Void>(HttpStatus.OK);
     }
 }

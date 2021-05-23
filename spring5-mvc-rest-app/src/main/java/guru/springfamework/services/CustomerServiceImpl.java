@@ -1,7 +1,7 @@
 package guru.springfamework.services;
 
 import guru.springfamework.api.v1.mapper.CustomerMapper;
-import guru.springfamework.api.v1.model.CustomerDTO;
+import guru.springfamework.model.CustomerDTO;
 import guru.springfamework.controllers.v1.CustomerController;
 import guru.springfamework.domain.Customer;
 import guru.springfamework.repositories.CustomerRepository;
@@ -25,7 +25,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<CustomerDTO> getAllCustomers() throws ResourceNotFoundException {
+    public List<? extends guru.springfamework.model.CustomerDTO> getAllCustomers() throws ResourceNotFoundException {
         return customerRepository.findAll()
                 .stream()
                 .map(customer -> {
@@ -37,7 +37,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerDTO getCustomerByName(String name) throws ResourceNotFoundException {
+    public guru.springfamework.model.CustomerDTO getCustomerByName(String name) throws ResourceNotFoundException {
         return null;
     }
 
